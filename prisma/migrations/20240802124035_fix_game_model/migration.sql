@@ -1,0 +1,8 @@
+-- DropForeignKey
+ALTER TABLE "Game" DROP CONSTRAINT "Game_userID_fkey";
+
+-- AlterTable
+ALTER TABLE "Game" ALTER COLUMN "time" SET DATA TYPE BIGINT;
+
+-- AddForeignKey
+ALTER TABLE "Game" ADD CONSTRAINT "Game_userID_fkey" FOREIGN KEY ("userID") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

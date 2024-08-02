@@ -26,6 +26,32 @@
   }
 }
 
+@keyframes connect-horizontal {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 150%;
+  }
+}
+
+@keyframes connect-vertical {
+  0% {
+    height: 0%;
+  }
+  100% {
+    height: 150%;
+  }
+}
+
+.connect-y::after {
+  animation: connect-vertical 0.2s forwards;
+}
+
+.connect-x::after {
+  animation: connect-horizontal 0.2s forwards;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

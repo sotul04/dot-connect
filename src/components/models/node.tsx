@@ -7,9 +7,9 @@ export const nodeVariants = cva(
     {
         variants: {
             variant: {
-                default: "bg-gray-300 rounded-full",
+                default: "bg-gray-300 rounded-full cursor-pointer",
                 blocked: "bg-black rounded-sm",
-                picked: "bg-green-700 rounded-full",
+                picked: "bg-emerald-600 rounded-full cursor-pointer",
             },
             level: {
                 beginner: "w-[80px] h-[80px] m-[20px]",
@@ -19,14 +19,14 @@ export const nodeVariants = cva(
             },
             arrow: {
                 default: "",
-                left: "after:absolute after:h-[25%] after:w-[150%] after:bg-inherit after:right-[50%] after:top-[37.5%]",
-                top: "after:absolute after:w-[25%] after:h-[150%] after:bg-inherit after:bottom-[50%] after:left-[37.5%]",
-                right: "after:absolute after:h-[25%] after:w-[150%] after:bg-inherit after:left-[50%] after:top-[37.5%]",
-                bottom: "after:absolute after:w-[25%] after:h-[150%] after:bg-inherit after:top-[50%] after:left-[37.5%]",
+                left: "after:absolute after:rounded-full after:h-[25%] after:w-[150%] after:bg-inherit after:right-[50%] after:top-[37.5%] connect-x",
+                top: "after:absolute after:rounded-full after:w-[25%] after:h-[150%] after:bg-inherit after:bottom-[50%] after:left-[37.5%] connect-y",
+                right: "after:absolute after:rounded-full after:h-[25%] after:w-[150%] after:bg-inherit after:left-[50%] after:top-[37.5%] connect-x",
+                bottom: "after:absolute after:rounded-full after:w-[25%] after:h-[150%] after:bg-inherit after:top-[50%] after:left-[37.5%] connect-y",
             },
             current: {
-                true: "current-node", // Animated
-                false: "", // Not animated
+                true: "current-node",
+                false: "",
             }
         },
         defaultVariants: {
