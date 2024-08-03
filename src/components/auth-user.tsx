@@ -1,8 +1,5 @@
 'use client'
 
-import { signOut, selectAuth } from "@/lib/slices/auth"
-import { useAppDispatch, useAppSelector } from "@/lib/hooks"
-
 import {
     Avatar,
     AvatarFallback
@@ -14,16 +11,19 @@ import {
 } from '@/components/ui/popover';
 import { Button, buttonVariants } from "./ui/button";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 export default function AuthUser() {
-    const authUser = useAppSelector(selectAuth);
-    const dispatch = useAppDispatch();
-
-    console.log("AUTH USER", authUser);
+    const session = useSession();
 
     let authContent: React.ReactNode;
-    if (authUser.isAuthenticated) {
-        const name = authUser.username;
+    if (session.status === 'loading') {
+        authContent = null;
+    }
+    else if (session.data?.user) {
+        console.log(session);
+        const name = session.data.user.username || '';
         authContent = <Popover>
         <PopoverTrigger>
             <Avatar>
@@ -32,8 +32,8 @@ export default function AuthUser() {
         </PopoverTrigger>
         <PopoverContent className="w-[200px]">
             <div className="flex flex-col items-center gap-4">
-                <h3>Hello, <strong>{name}</strong></h3>
-                <form action={() => dispatch(signOut())}>
+                <h3>Hello, <strong>{name.toUpperCase()}</strong></h3>
+                <form action={() => signOut()}>
                     <Button type="submit" variant="destructive">Sign out</Button>
                 </form>
             </div>

@@ -18,8 +18,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useToast } from "../ui/use-toast";
 import { useState } from "react";
-import { signIn } from "@/lib/slices/auth";
+// import { signIn } from "@/lib/slices/auth";
 import { useAppDispatch } from "@/lib/hooks";
+import { signIn } from "next-auth/react";
 
 const FormSchema = z.object({
     username: z.string().min(1, 'Username is required.'),
@@ -43,31 +44,16 @@ export default function NewGameForm() {
     });
 
     const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-        const response = await fetch('api/auth/signin', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: values.username,
-                password: values.password,
-            })
+        const signInData = await signIn('credentials', {
+            username: values.username,
+            password: values.password,
+            redirect: false,
         });
 
-        if (response.ok) {
-            const data = await response.json();
-            if (!data.user) {
-                setIsLoadError(true);
-            } else {
-                dispatch(signIn({username: data.user.username, id: data.user.id}));
-                router.push("/");
-            }
+        if (signInData?.ok) {
+            router.push("/");
         } else {
-            toast({
-                title: "Failed to Load Game",
-                description: "Oops, something went wrong.",
-                variant: 'destructive',
-            });
+            setIsLoadError(true);
         }
     }
 

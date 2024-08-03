@@ -1,4 +1,7 @@
+import BoardGame from "@/components/board";
 
 export default function GamePage() {
-    return <div>Game Page</div>
+    return <div>
+        <BoardGame/>
+    </div>;
 }

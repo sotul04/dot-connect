@@ -1,12 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
 import boardReducer from '@/lib/slices/board';
-import authReducer from '@/lib/slices/auth'
 
 export const makeStore = () => {
     return configureStore({
         reducer: {
             board: boardReducer,
-            auth: authReducer,
         },
         devTools: true,
     })

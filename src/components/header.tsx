@@ -1,5 +1,5 @@
 import Link from "next/link";
-import LeaderBoard from "./leader-board";
+import LeaderBoard from "@/components/common/leader-board";
 import AuthUser from "./auth-user";
 import Image from "next/image";
 

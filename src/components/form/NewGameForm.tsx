@@ -18,8 +18,8 @@ import { useRouter } from "next/navigation";
 import { useToast } from "../ui/use-toast";
 import { useEffect, useState } from "react";
 import debounce from 'lodash/debounce';
-import { signIn } from "@/lib/slices/auth";
 import { useAppDispatch } from "@/lib/hooks";
+import { signIn } from "next-auth/react";
 
 const FormSchema = z.object({
     username: z.string().min(1, 'Name is required.').max(100),
@@ -81,10 +81,21 @@ export default function SignUpForm() {
         });
 
         if (response.ok) {
-            router.push('/');
-            const data = await response.json();
-            console.log("DATA REGISTERED", data);
-            dispatch(signIn({username: data.user.username, id: data.user.id}))
+            const signInData = await signIn('credentials', {
+                username: values.username,
+                password: values.password,
+                redirect: false,
+            });
+
+            if (signInData?.ok) {
+                router.push("/");
+            } else {
+                toast({
+                    title: "Failed create sign in as new User",
+                    description: "Oops, something went wrong.",
+                    variant: 'destructive',
+                });
+            }
         } else {
             if (response.status === 400) {
                 toast({

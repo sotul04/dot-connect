@@ -8,12 +8,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChartNoAxesColumnIcon } from "lucide-react";
 import LeaderBoardShow from "./leader-board-show";
-import { Label } from "./ui/label";
+import { Label } from "@/components/ui/label";
 
 export default async function LeaderBoard() {
     return <Dialog>
         <DialogTrigger asChild>
-            <Button variant="outline"><ChartNoAxesColumnIcon />Leaderboard</Button>
+            <Button variant="outline" className="border-none"><ChartNoAxesColumnIcon />Leaderboard</Button>
         </DialogTrigger>
         <DialogContent>
             <DialogHeader>
