@@ -18,8 +18,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "../ui/use-toast";
 import { useEffect, useState } from "react";
 import debounce from 'lodash/debounce';
-import { useAppDispatch } from "@/lib/hooks";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 const FormSchema = z.object({
     username: z.string().min(1, 'Name is required.').max(100),
@@ -33,6 +32,13 @@ const FormSchema = z.object({
 export default function SignUpForm() {
     const { toast } = useToast();
     const router = useRouter();
+
+    const session = useSession();
+
+    if (session.data?.user) {
+        router.back();
+    }
+
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -41,8 +47,6 @@ export default function SignUpForm() {
             confirmPassword: '',
         }
     });
-
-    const dispatch = useAppDispatch();
 
     const [isUsernameAvailable, setIsUsernameAvailable] = useState<boolean | null>(null);
 

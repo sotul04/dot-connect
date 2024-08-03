@@ -61,6 +61,17 @@ export class Board {
         );
     }
 
+    static fromBoard(board: number[][]) {
+        let post2: {row: number, col: number} = {row: 0, col: 0}, blockCount: number = 0;
+        board.map((rows, row) => {
+            rows.map((cell, col) => {
+                if (cell === 2) post2 = {row, col};
+                else if (cell === 1) blockCount++;
+            })
+        })
+        return new Board(board, {row: board.length, col: board[0].length}, new Path(post2.row, post2.col), blockCount);
+    }
+
     toObject(): any {
         return {
             board: this.board,

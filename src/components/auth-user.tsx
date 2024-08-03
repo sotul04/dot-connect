@@ -22,7 +22,6 @@ export default function AuthUser() {
         authContent = null;
     }
     else if (session.data?.user) {
-        console.log(session);
         const name = session.data.user.username || '';
         authContent = <Popover>
         <PopoverTrigger>

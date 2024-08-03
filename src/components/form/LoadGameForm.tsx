@@ -16,11 +16,9 @@ import { z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useToast } from "../ui/use-toast";
 import { useState } from "react";
-// import { signIn } from "@/lib/slices/auth";
-import { useAppDispatch } from "@/lib/hooks";
 import { signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 const FormSchema = z.object({
     username: z.string().min(1, 'Username is required.'),
@@ -30,8 +28,11 @@ const FormSchema = z.object({
 export default function NewGameForm() {
 
     const router = useRouter();
-    const { toast } = useToast();
-    const dispatch = useAppDispatch();
+    const session = useSession();
+
+    if (session.data?.user) {
+        router.back();
+    }
 
     const [isLoadError, setIsLoadError] = useState(false);
 

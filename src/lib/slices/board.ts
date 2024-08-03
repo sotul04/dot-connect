@@ -24,7 +24,9 @@ const initialState = {
         blockCount: 4
     }).toObject(),
     isFinished: false,
-    currentTime: 0
+    currentTime: 0,
+    level: 'beginner',
+    mode: 'manual-random'
 }
 
 
@@ -34,12 +36,20 @@ export interface VisitBoardProps {
 }
 
 export interface NewBoardProps {
-    board: Board;
+    board: number[][];
 }
 
 export interface FinishProps {
     isFinished: boolean;
     currentTime: number;
+}
+
+export interface SetLevelProps {
+    level: string | 'beginner' | 'easy' | 'medium' | 'hard';
+}
+
+export interface ModeProps {
+    mode: "manual-random" | "manual-custom" | "bot" | string
 }
 
 const BoardSlice = createSlice({
@@ -52,7 +62,7 @@ const BoardSlice = createSlice({
             state.board = board.toObject();
         },
         replace: (state, action: PayloadAction<NewBoardProps>) => {
-            state.board =  action.payload.board.toObject();
+            state.board =  Board.fromBoard(action.payload.board).toObject();
         },
         setFinish: (state, action: PayloadAction<FinishProps>) => {
             state.isFinished = action.payload.isFinished;
@@ -61,11 +71,17 @@ const BoardSlice = createSlice({
         resetFinish: (state) => {
             state.currentTime = 0;
             state.isFinished = false;
+        },
+        setLevel: (state, action: PayloadAction<SetLevelProps>) => {
+            state.level = action.payload.level;
+        },
+        setMode: (state, action: PayloadAction<ModeProps>) => {
+            state.mode = action.payload.mode;
         }
     }
 });
 
-export const { visit, replace, setFinish, resetFinish } = BoardSlice.actions;
+export const { visit, replace, setFinish, resetFinish, setLevel, setMode } = BoardSlice.actions;
 
 export const selectBoard = (state: RootState) => state.board;
 
