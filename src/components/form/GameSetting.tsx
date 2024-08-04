@@ -17,8 +17,9 @@ import UserInputBoard from "./UserInputBoard";
 import { Dispatch, SetStateAction, useState } from "react";
 import ManualForm from "./ManualGameForm";
 import { Button } from "../ui/button";
-import { getLevel } from "@/lib/utils";
+import { getLevel, getSize } from "@/lib/utils";
 import { useToast } from "../ui/use-toast";
+import { Board } from "@/models/Board";
 
 interface SettingsProps {
     setSettingsOn: Dispatch<SetStateAction<boolean>>
@@ -93,6 +94,7 @@ export default function GameSetting({ setPaths, setSettingsOn }: SettingsProps) 
             }
         } else {
             // TODO: generate random board
+            dispatch(replace({board: Board.randomBoard(getSize(gameState.level))}));
         }
         setErrorBoardMessage(null);
         setBoardUploaded(null);

@@ -132,7 +132,7 @@ export default function Game({ paths = null, setPaths, setSettingsOn }: GameProp
                     </div>
                 </PopoverContent>
             </Popover>
-            {gameState.mode === 'bot' && <>
+            {gameState.mode === 'bot' && paths && <>
                 <Button onClick={() => {
                     setIsStartBot(prev => !prev)
                 }}>{isStartBot ? 'Stop & Reset Bot' : 'Start Bot'}</Button>

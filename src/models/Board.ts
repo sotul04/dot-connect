@@ -22,7 +22,7 @@ export class Board {
             for (const rows of this.board) {
                 for (const cell of rows) {
                     if (cell === 1) {
-                        this.blockCount ++
+                        this.blockCount++
                     }
                 }
             }
@@ -61,7 +61,7 @@ export class Board {
         this.step = visited;
     }
 
-    static fromObject(obj: {board: number[][], size: any, step: any, blockCount: number} ): Board {
+    static fromObject(obj: { board: number[][], size: any, step: any, blockCount: number }): Board {
         return new Board(
             obj.board,
             obj.size,
@@ -71,22 +71,23 @@ export class Board {
     }
 
     static fromBoard(board: number[][]) {
-        let post2: {row: number, col: number} = {row: 0, col: 0}, blockCount: number = 0;
+        let post2: { row: number, col: number } = { row: 0, col: 0 }, blockCount: number = 0;
         board.map((rows, row) => {
             rows.map((cell, col) => {
-                if (cell === 2) post2 = {row, col};
+                if (cell === 2) post2 = { row, col };
                 else if (cell === 1) blockCount++;
             })
         })
-        return new Board(board, {row: board.length, col: board[0].length}, new Path(post2.row, post2.col), blockCount);
+        return new Board(board, { row: board.length, col: board[0].length }, new Path(post2.row, post2.col), blockCount);
     }
 
     toObject(): {
-        board: number[][], 
-        isVisited: boolean[][], 
-        size: {row: number, col: number},
+        board: number[][],
+        isVisited: boolean[][],
+        size: { row: number, col: number },
         step: any,
-        blockCount: number} {
+        blockCount: number
+    } {
         return {
             board: this.board,
             isVisited: this.isVisited,
@@ -99,4 +100,28 @@ export class Board {
     isFinish() {
         return this.size.row * this.size.col - this.blockCount <= this.step.length;
     }
+
+    static randomBoard({ row, col }: { row: number, col: number }) {
+        const board = Array.from({ length: row }, () => Array(col).fill(0));
+        for (let i = 0; i < row; i++) {
+            for (let j = 0; j < col; j++) {
+                if (chanceOfTrue(0.2)) {
+                    board[i][j] = 1;
+                }
+            }
+        }
+        const srow = getRandomValue(row);
+        const scol = getRandomValue(col);
+        board[srow][scol] = 2;
+        return board;
+    }
+}
+
+function getRandomValue(x: number): number {
+    return Math.floor(Math.random() * x);
+}
+
+// 0 <= probability <= 1 
+function chanceOfTrue(probability: number): boolean {
+    return Math.random() < probability;
 }

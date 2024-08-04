@@ -32,6 +32,13 @@ export function getLevel({ row, col}: {row: number, col: number}): "beginner" | 
   return "hard";
 }
 
+export function getSize(level: "beginner" | "easy" | "medium" | "hard" | string): {row: number, col: number} {
+  if (level === "beginner") return {row: 5, col: 5}
+  if (level === 'easy') return {row: 8, col: 6}
+  if (level === 'medium') return {row: 10, col: 6}
+  return {row: 12, col: 8}
+}
+
 export function getDirection(row: number, col: number, drow: number, dcol: number) : "default" | "left" | "top" | "right" | "bottom" | null | undefined {
   if (row === drow) {
     if (col < dcol) return "right";
