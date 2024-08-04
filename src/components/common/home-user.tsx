@@ -1,19 +1,16 @@
-'use client'
-
-import { useSession } from "next-auth/react";
-import { Button, buttonVariants } from "../ui/button";
+import { buttonVariants } from "../ui/button";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 
-export default function HomeUser() {
+export default async function HomeUser() {
 
-    const session = useSession();
+    const session = await getServerSession(authOptions);
 
     let content: React.ReactNode;
-    if (session.status === 'loading') {
-        content = null;
-    } else if (session.data?.user) {
+    if (session?.user) {
         content = <>
-            <h1 className="text-5xl font-semibold my-4">Hello, <strong>{session.data.user.username.toUpperCase()}</strong></h1>
+            <h1 className="text-5xl font-semibold my-4">Hello, <strong>{session.user.username.toUpperCase()}</strong></h1>
             <p className="font-mono font-bold text-xl my-3">What are you waiting?</p>
             <Link href="/game" className={buttonVariants({ variant: 'default', size: 'lg' }) + " text-xl"}>Let&apos;s Play</Link>
         </>

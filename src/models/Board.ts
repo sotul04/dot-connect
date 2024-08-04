@@ -17,7 +17,16 @@ export class Board {
         this.isVisited = Array.from({ length: size.row }, () => Array(size.col).fill(false));
         this.size = { ...size };
         this.step = step;
-        this.blockCount = 0;
+        this.blockCount = blockCount;
+        if (blockCount === 0) {
+            for (const rows of this.board) {
+                for (const cell of rows) {
+                    if (cell === 1) {
+                        this.blockCount ++
+                    }
+                }
+            }
+        }
         let curr: Path | null = step;
         while (curr) {
             this.isVisited[curr.row][curr.col] = true;
@@ -72,7 +81,12 @@ export class Board {
         return new Board(board, {row: board.length, col: board[0].length}, new Path(post2.row, post2.col), blockCount);
     }
 
-    toObject(): any {
+    toObject(): {
+        board: number[][], 
+        isVisited: boolean[][], 
+        size: {row: number, col: number},
+        step: any,
+        blockCount: number} {
         return {
             board: this.board,
             isVisited: this.isVisited,
@@ -83,6 +97,6 @@ export class Board {
     }
 
     isFinish() {
-        
+        return this.size.row * this.size.col - this.blockCount <= this.step.length;
     }
 }

@@ -62,9 +62,9 @@ export default function BoardGame() {
     </>
 
     return (
-        <section className="w-full flex flex-col my-10 justify-center items-center">
+        <>
             {board}
-        </section>
+        </>
     );
 
 }

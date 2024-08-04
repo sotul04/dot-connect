@@ -43,3 +43,14 @@ export function getDirection(row: number, col: number, drow: number, dcol: numbe
   }
   return "default";
 }
+
+// utils/formatTime.ts
+export const formatTime = (seconds: number): string => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+
+  const formatNumber = (num: number): string => (num < 10 ? `0${num}` : num.toString());
+
+  return `${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(secs)}`;
+};
