@@ -31,7 +31,7 @@ export default function UserInputBoard( { setUploadBoard }: UserInputProps) {
                 else {
                     setParsingMessage(null);
                     dispatch(replace({board: parsedContent}))
-                }
+                } 
             } catch (error) {
                 setParsingMessage('Failed to parse the file.')
             }

@@ -23,10 +23,10 @@ import { Board } from "@/models/Board";
 
 interface SettingsProps {
     setSettingsOn: Dispatch<SetStateAction<boolean>>
-    setPaths: Dispatch<SetStateAction<number[][] | null>>
+    // setPaths: Dispatch<SetStateAction<number[][] | null>>
 }
 
-export default function GameSetting({ setPaths, setSettingsOn }: SettingsProps) {
+export default function GameSetting({ setSettingsOn }: SettingsProps) {
 
     const gameState = useAppSelector(selectBoard);
     const dispatch = useAppDispatch();
@@ -54,44 +54,44 @@ export default function GameSetting({ setPaths, setSettingsOn }: SettingsProps) 
                 setErrorBoardMessage('The board\'s dimension you uploaded doesn\'t match the level\'s dimension.');
                 return;
             }
-            if (gameState.mode === 'bot') {
-                try {
-                    const response = await fetch('http://localhost:8080/solve', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'apllication/json',
-                        },
-                        body: JSON.stringify({
-                            board: gameState.board.board
-                        })
-                    })
+            // if (gameState.mode === 'bot') {
+            //     try {
+            //         const response = await fetch('http://localhost:8080/solve', {
+            //             method: 'POST',
+            //             headers: {
+            //                 'Content-Type': 'apllication/json',
+            //             },
+            //             body: JSON.stringify({
+            //                 board: gameState.board.board
+            //             })
+            //         })
 
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (data.status === 'success') {
-                            const paths: number[][] = data.path;
-                            setPaths(paths)
-                            toast({
-                                title: "Board solution received",
-                                description: `Execution time needed is ${data.time}`
-                            })
-                        } else {
-                            setPaths(null);
-                            toast({
-                                title: "Board has no solution",
-                                description: `Execution time needed is ${data.time}`
-                            })
-                        }
-                    } else {
-                        setPaths(null)
-                        setErrorBoardMessage('Something went wrong. The response from solver Server is error.');
-                        return;
-                    }
-                } catch (error) {
-                    setErrorBoardMessage('Something went wrong. The response from solver Server is error.');
-                    return;
-                }
-            }
+            //         if (response.ok) {
+            //             const data = await response.json();
+            //             if (data.status === 'success') {
+            //                 const paths: number[][] = data.path;
+            //                 setPaths(paths)
+            //                 toast({
+            //                     title: "Board solution received",
+            //                     description: `Execution time needed is ${data.time}`
+            //                 })
+            //             } else {
+            //                 setPaths(null);
+            //                 toast({
+            //                     title: "Board has no solution",
+            //                     description: `Execution time needed is ${data.time}`
+            //                 })
+            //             }
+            //         } else {
+            //             setPaths(null)
+            //             setErrorBoardMessage('Something went wrong. The response from solver Server is error.');
+            //             return;
+            //         }
+            //     } catch (error) {
+            //         setErrorBoardMessage('Something went wrong. The response from solver Server is error.');
+            //         return;
+            //     }
+            // }
         } else {
             // TODO: generate random board
             dispatch(replace({board: Board.randomBoard(getSize(gameState.level))}));

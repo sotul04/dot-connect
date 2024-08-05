@@ -11,8 +11,8 @@ export default function GamePage() {
     const [botPath, setBotPath] = useState<number[][] | null>(null);
 
     return <div>
-        {settingsOn ? <GameSetting setPaths={setBotPath} setSettingsOn={setSettingsOn}/>
-        : <Game paths={botPath} setPaths={setBotPath} setSettingsOn={setSettingsOn}/>
+        {settingsOn ? <GameSetting setSettingsOn={setSettingsOn}/>
+        : <Game setSettingsOn={setSettingsOn}/>
         }
     </div>;
 }

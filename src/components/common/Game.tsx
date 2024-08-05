@@ -10,6 +10,7 @@ import { MenuIcon } from "lucide-react"
 import {
     AlertDialog,
     AlertDialogContent,
+    AlertDialogDescription,
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
@@ -19,14 +20,15 @@ import * as actions from '@/actions'
 import { useToast } from "../ui/use-toast"
 
 interface GameProps {
-    paths: number[][] | null;
-    setPaths: Dispatch<SetStateAction<number[][] | null>>;
+    // paths: number[][] | null;
+    // setPaths: Dispatch<SetStateAction<number[][] | null>>;
     setSettingsOn: Dispatch<SetStateAction<boolean>>;
 }
 
 let index = 0;
+let paths: number[][] | null = null;
 
-export default function Game({ paths = null, setPaths, setSettingsOn }: GameProps) {
+export default function Game({ setSettingsOn }: GameProps) {
 
     const { toast } = useToast();
     const dispatch = useAppDispatch();
@@ -36,6 +38,7 @@ export default function Game({ paths = null, setPaths, setSettingsOn }: GameProp
 
     const [isStartBot, setIsStartBot] = useState(false);
     const [time, setTime] = useState(0);
+    const [dataSolved, setDataSolved] = useState(false);
 
     if (gameState.isFinished) {
         dispatch(setFinish({ isFinished: true, currentTime: time }))
@@ -49,11 +52,12 @@ export default function Game({ paths = null, setPaths, setSettingsOn }: GameProp
 
     function handleNewBoard() {
         handleFinished();
-        setPaths(null);
+        paths = null;
         setSettingsOn(true);
         dispatch(initState());
         setTime(0);
         setIsStartBot(false);
+        setDataSolved(false);
     }
 
     async function sendData() {
@@ -62,7 +66,7 @@ export default function Game({ paths = null, setPaths, setSettingsOn }: GameProp
             mode = 'manual';
         }
         const resnum = await actions.createGameHistory(gameState.currentTime, mode, gameState.level);
-        if (resnum == -1 ) {
+        if (resnum == -1) {
             toast({
                 title: 'Successfully saved',
                 description: 'Your history has been saved.',
@@ -71,13 +75,13 @@ export default function Game({ paths = null, setPaths, setSettingsOn }: GameProp
             toast({
                 title: 'Your history is not saved',
                 description: 'You need to be authenticated to save your history.',
-                variant:'destructive'
+                variant: 'destructive'
             })
         } else {
             toast({
                 title: 'Your history is not saved',
                 description: 'Something went wrong.',
-                variant:'destructive'
+                variant: 'destructive'
             })
         }
     }
@@ -89,6 +93,62 @@ export default function Game({ paths = null, setPaths, setSettingsOn }: GameProp
 
         return () => {
             if (timerGame.current) clearInterval(timerGame.current);
+        }
+    }, [])
+
+    useEffect(() => {
+        async function solveBoard() {
+            console.log("Try to get solution from server.")
+            try {
+                const response = await fetch('http://localhost:8080/solve', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'apllication/json',
+                    },
+                    body: JSON.stringify({
+                        board: gameState.board.board
+                    })
+                })
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        const steps: number[][] = data.path;
+                        paths = steps
+                        toast({
+                            title: "Board solution received",
+                            description: `Execution time needed is ${data.time}`
+                        })
+                        setDataSolved(true);
+                    } else {
+                        paths = null;
+                        toast({
+                            title: "Board has no solution",
+                            description: `Execution time needed is ${data.time}`
+                        })
+                        setDataSolved(false);
+                    }
+                } else {
+                    paths = null;
+                    toast({
+                        title: "Error",
+                        description: 'Something went wrong. The response from solver Server is error.'
+                    })
+                    setDataSolved(false);
+                    return;
+                }
+            } catch (error) {
+                paths = null;
+                toast({
+                    title: "Error",
+                    description: 'Something went wrong.'
+                })
+                setDataSolved(false);
+                return;
+            }
+        }
+        if (gameState.mode === 'bot') {
+            solveBoard();
         }
     }, [])
 
@@ -132,8 +192,8 @@ export default function Game({ paths = null, setPaths, setSettingsOn }: GameProp
                     </div>
                 </PopoverContent>
             </Popover>
-            {gameState.mode === 'bot' && paths && <>
-                <Button onClick={() => {
+            {gameState.mode === 'bot' && <>
+                <Button disabled={!dataSolved} onClick={() => {
                     setIsStartBot(prev => !prev)
                 }}>{isStartBot ? 'Stop & Reset Bot' : 'Start Bot'}</Button>
             </>}
@@ -144,7 +204,9 @@ export default function Game({ paths = null, setPaths, setSettingsOn }: GameProp
             <AlertDialogContent className="max-w-[220px]">
                 <AlertDialogHeader >
                     <AlertDialogTitle className="text-center">You Win</AlertDialogTitle>
-                    <h2 className="text-center text-lg">Time: <strong>{formatTime(gameState.currentTime)}</strong></h2>
+                    <AlertDialogDescription className="text-center text-md">
+                        <>Time: <strong>{formatTime(gameState.currentTime)}</strong></>
+                    </AlertDialogDescription>
                     <Button onClick={() => {
                         sendData();
                         handleNewBoard();
