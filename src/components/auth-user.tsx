@@ -39,7 +39,7 @@ export default function AuthUser() {
         </PopoverContent>
     </Popover>
     } else {
-        authContent = <div className="flex gap-3">
+        authContent = <div className="flex flex-col gap-3 sm:flex-row">
             <Link href="/new-game" className={buttonVariants({variant: "outline"})}>New Game</Link>
             <Link href="/load-game" className={buttonVariants({variant: "outline"})}>Load Game</Link>
         </div>
