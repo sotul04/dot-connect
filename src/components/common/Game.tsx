@@ -15,13 +15,10 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { formatTime } from "@/lib/utils"
-import { DialogHeader, DialogTitle } from "../ui/dialog"
 import * as actions from '@/actions'
 import { useToast } from "../ui/use-toast"
 
 interface GameProps {
-    // paths: number[][] | null;
-    // setPaths: Dispatch<SetStateAction<number[][] | null>>;
     setSettingsOn: Dispatch<SetStateAction<boolean>>;
 }
 
