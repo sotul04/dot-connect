@@ -100,7 +100,7 @@ export default function Game({ setSettingsOn }: GameProps) {
         async function solveBoard() {
             console.log("Try to get solution from server.")
             try {
-                const response = await fetch('http://localhost:8080/solve', {
+                const response = await fetch('https://dotconnect-api.vercel.app/solve', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'apllication/json',
